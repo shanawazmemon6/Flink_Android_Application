@@ -41,7 +41,7 @@ public class SplashScreen extends AppCompatActivity {
     EditText email;
     EditText passowrd;
     UserDetails userDetails;
-    String base_url="http://192.168.0.8:8086/Flink_BE/";
+    String base_url="http://172.16.0.6:8086/Flink_BE/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +78,6 @@ public class SplashScreen extends AppCompatActivity {
                 String status=us_obj.getStatus();
                 String code=us_obj.getCode();
                 String role=us_obj.getRole();
-                String Username=us_obj.getUsername();
 
 
                 if(code.equals("200")){

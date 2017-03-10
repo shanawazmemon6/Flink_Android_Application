@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Flink</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_admin">AdminActivity</string>
-    <string name="title_activity_user">UserActivity</string>
+    <string name="title_activity_admin">Flink</string>
+    <string name="title_activity_user">Flink</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>
