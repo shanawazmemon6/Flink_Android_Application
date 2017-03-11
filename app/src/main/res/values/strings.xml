@@ -4,4 +4,5 @@
     <string name="title_activity_admin">Flink</string>
     <string name="title_activity_user">Flink</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_job_full_description">JobFullDescription</string>
 </resources>
