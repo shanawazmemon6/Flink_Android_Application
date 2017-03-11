@@ -9,9 +9,27 @@ public class JobDetails extends ErrorManger {
     public String status;
     public String description;
     public String date_time;
+    public  String job_status;
+    public String job_date;
+
+    public String getJob_date() {
+        return job_date;
+    }
+
+    public void setJob_date(String job_date) {
+        this.job_date = job_date;
+    }
 
     public String getId() {
         return id;
+    }
+
+    public String getJob_status() {
+        return job_status;
+    }
+
+    public void setJob_status(String job_status) {
+        this.job_status = job_status;
     }
 
     public void setId(String id) {
