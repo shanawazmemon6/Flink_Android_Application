@@ -29,11 +29,6 @@
         <activity
             android:name=".AdminActivity"
             android:label="@string/title_activity_admin"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Job_display_fragment" />
-        <activity
-            android:name=".JobFullDescription"
-            android:label="@string/title_activity_job_full_description"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
