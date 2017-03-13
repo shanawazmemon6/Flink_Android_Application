@@ -3,14 +3,6 @@ package com.shanawaz.flink.flink;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,27 +11,19 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.shanawaz.flink.flink.model.JobDetails;
-import com.shanawaz.flink.flink.model.UserDetails;
 
-import org.springframework.http.HttpMethod;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.util.support.Base64;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,7 +33,7 @@ public class JobFragment extends android.support.v4.app.Fragment {
 
 private RecycleJobAdpter jobAdpter;
 public RecyclerView recyclerView_job;
-    private String base_url="http://192.168.0.3:8086/Flink_BE/";
+    private String base_url="http://192.168.0.4:8086/Flink_BE/";
 
 
 
@@ -119,15 +103,10 @@ public RecyclerView recyclerView_job;
 
         return view;
     }
-
-
-
-
     public class RecycleJobAdpter extends RecyclerView.Adapter<RecycleJobAdpter.JobViewHolder>{
-
         List<JobDetails> job_list;
 
-       public RecycleJobAdpter(List<JobDetails> job_adp_list){
+        public RecycleJobAdpter(List<JobDetails> job_adp_list){
            this.job_list=job_adp_list;
        }
 

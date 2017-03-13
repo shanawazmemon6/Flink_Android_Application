@@ -40,8 +40,7 @@ public class SplashScreen extends AppCompatActivity {
     Button loginbtn;
     EditText email;
     EditText passowrd;
-    UserDetails userDetails;
-    String base_url="http://192.168.0.3:8086/Flink_BE/";
+    String base_url="http://192.168.0.4:8086/Flink_BE/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,14 +52,17 @@ public class SplashScreen extends AppCompatActivity {
         email = (EditText) findViewById(R.id.email);
         passowrd = (EditText) findViewById(R.id.password);
          Gson gson=new Gson();
-        userDetails = new UserDetails();
+
         SharedPreferences sharedPreferences = getSharedPreferences("login_credentials", MODE_PRIVATE);
-        String user_details = sharedPreferences.getString("login_user", "");
+        final String user_details = sharedPreferences.getString("login_user", "");
 
         if (!user_details.equals("")) {
             final UserDetails prefence_user = gson.fromJson(user_details, UserDetails.class);
             if (prefence_user.getCode().equals("200")) {
-                startActivity(new Intent(getApplicationContext(), UserActivity.class));
+                UserDetails  userDetails = new UserDetails();
+                 userDetails.setUsername(prefence_user.getUsername());
+                 userDetails.setPassword(prefence_user.getPassword());
+                login(userDetails);
             }
 
         }
@@ -69,56 +71,63 @@ public class SplashScreen extends AppCompatActivity {
         loginbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                UserDetails  userDetails = new UserDetails();
                 String mailid = email.getText().toString();
                 userDetails.setUsername(mailid);
                 userDetails.setPassword(passowrd.getText().toString());
-                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
-                String url = "" + base_url + "loginAuthentication";
-                RestTemplate rest = new RestTemplate();
-                List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
-                messageConverters.add(new FormHttpMessageConverter());
-                messageConverters.add(new StringHttpMessageConverter());
-                messageConverters.add(new MappingJackson2HttpMessageConverter());
-                rest.setMessageConverters(messageConverters);
-                String user = rest.postForObject(url, userDetails, String.class);
-                UserDetails us_obj = gson.fromJson(user, UserDetails.class);
-                String status = us_obj.getStatus();
-                String code = us_obj.getCode();
-                String role = us_obj.getRole();
-
-
-
-                         if (code.equals("200")) {
-                        String logindetails = gson.toJson(us_obj);
-
-                             if ((role.equals("Student") || role.equals("Alumni") || role.equals("Alumni")) && (status.equals("accepted"))) {
-
-                          SharedPreferences  sharedPreferences = getSharedPreferences("login_credentials", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("login_user", logindetails);
-                            if (editor.commit()) {
-                                startActivity(new Intent(getApplicationContext(), UserActivity.class));
-                            }
-
-                        } else if (role.equals("Admin")) {
-
-                         SharedPreferences   sharedPreferences = getSharedPreferences("login_credentials", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("login_user", logindetails);
-                            if (editor.commit()) {
-                                startActivity(new Intent(getApplicationContext(), AdminActivity.class));
-                            }
-
-                        }
-
-                    }
-
-
-
-
+                login(userDetails);
 
             }
         });
+}
+
+
+public void login(UserDetails user_obj){
+
+    Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
+    String url = "" + base_url + "loginAuthentication";
+    RestTemplate rest = new RestTemplate();
+    List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
+    messageConverters.add(new FormHttpMessageConverter());
+    messageConverters.add(new StringHttpMessageConverter());
+    messageConverters.add(new MappingJackson2HttpMessageConverter());
+    rest.setMessageConverters(messageConverters);
+    String user = rest.postForObject(url, user_obj, String.class);
+    UserDetails us_obj = gson.fromJson(user, UserDetails.class);
+    String status = us_obj.getStatus();
+    String code = us_obj.getCode();
+    String role = us_obj.getRole();
+
+
+
+    if (code.equals("200")) {
+        String logindetails = gson.toJson(us_obj);
+
+        if ((role.equals("Student") || role.equals("Alumni") || role.equals("Alumni")) && (status.equals("accepted"))) {
+
+            SharedPreferences  sharedPreferences = getSharedPreferences("login_credentials", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("login_user", logindetails);
+            if (editor.commit()) {
+                startActivity(new Intent(getApplicationContext(), UserActivity.class));
+            }
+
+        } else if (role.equals("Admin")) {
+
+            SharedPreferences   sharedPreferences = getSharedPreferences("login_credentials", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("login_user", logindetails);
+            if (editor.commit()) {
+                startActivity(new Intent(getApplicationContext(), AdminActivity.class));
+            }
+
+        }
+
+    }
+
+
+
+
 }
 
 }
