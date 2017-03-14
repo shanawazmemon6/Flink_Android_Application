@@ -2,7 +2,9 @@ package com.shanawaz.flink.flink;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -38,6 +40,7 @@ public class JobFullDescription extends AppCompatActivity {
     private String base_url="http://192.168.0.4:8086/Flink_BE/";
     List<HttpMessageConverter<?>> messageConverters;
     Gson gson;
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

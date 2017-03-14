@@ -69,11 +69,11 @@ public class UserActivity extends AppCompatActivity {
 
             switch (position) {
                 case 0:
-                    return new JobFragment();
+                    return new BlogFragment();
                 case 1:
-                     return new BlogFragment();
+                     return new JobFragment();
 
-                default: return new JobFragment();
+                default: return new BlogFragment();
 
             }
 
@@ -90,9 +90,9 @@ public class UserActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Job";
-                case 1:
                     return "Blog";
+                case 1:
+                    return "Job";
 
             }
             return null;
