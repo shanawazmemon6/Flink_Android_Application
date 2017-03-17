@@ -12,6 +12,8 @@
         android:id="@+id/recycle_job"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/cardview_light_background"
         android:clipToPadding="true"
+
         tools:listitem="@android:layout/preference_category" />
 </LinearLayout>

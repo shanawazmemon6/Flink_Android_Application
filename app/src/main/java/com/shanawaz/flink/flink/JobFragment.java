@@ -1,16 +1,20 @@
 package com.shanawaz.flink.flink;
 
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Slide;
+import android.util.Pair;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,8 +41,9 @@ public class JobFragment extends android.support.v4.app.Fragment {
 
 private RecycleJobAdpter jobAdpter;
 public RecyclerView recyclerView_job;
-    private String base_url="http://192.168.0.4:8086/Flink_BE/";
-
+    private String base_url="http://192.168.0.7:8086/Flink_BE/";
+    public ImageView jobimage;
+    public TextView jobtitle;
 
 
     private Gson gson=new Gson();
@@ -46,7 +51,20 @@ public RecyclerView recyclerView_job;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,  Bundle savedInstanceState) {
 
+
         View view = inflater.inflate(R.layout.job_fragment, container, false);
+
+      /*  Slide slide_Right=new Slide();
+        slide_Right.setSlideEdge(Gravity.BOTTOM);
+        slide_Right.setDuration(500);
+        getActivity().getWindow().setReenterTransition(slide_Right);
+
+*/
+        Explode explode=new Explode();
+        explode.setDuration(1000);
+        getActivity().getWindow().setEnterTransition(explode);
+        getActivity().getWindow().setReenterTransition(explode);
+        getActivity().getWindow().setExitTransition(explode);
 
 
         String url = "" + base_url + "allJob";
@@ -65,6 +83,11 @@ public RecyclerView recyclerView_job;
         /*DividerItemDecoration dividerItemDecoration=new DividerItemDecoration(getActivity(),joblayoutManager.getOrientation());
         recyclerView_job.addItemDecoration(dividerItemDecoration);*/
         recyclerView_job.setAdapter(jobAdpter);
+
+
+
+
+
         final GestureDetector gesture = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapUp(MotionEvent e) {
@@ -79,6 +102,15 @@ public RecyclerView recyclerView_job;
                 View v = rv.findChildViewUnder(e.getX(), e.getY());
 
                 if (v != null && gesture.onTouchEvent(e)) {
+                    Pair[] pairs=new Pair[2];
+                    pairs[0]=new Pair<View,String>(jobimage,"jobimage");
+                    pairs[1]=new Pair<View,String>(jobtitle,"jobtitle");
+
+
+
+
+
+
 
                     Intent job_fulldescription = new Intent(getActivity(), JobFullDescription.class);
                     int posi = recyclerView_job.getChildPosition(v);
@@ -88,7 +120,7 @@ public RecyclerView recyclerView_job;
                     JobDetails jobDetails = mapper.convertValue(job_list.get(posi), JobDetails.class);
                     String job_json_string = gson.toJson(jobDetails);
                     job_fulldescription.putExtra("job_list", job_json_string);
-                    startActivity(job_fulldescription);
+                    startActivity(job_fulldescription,ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                     return true;
                 }
 
@@ -117,8 +149,7 @@ public RecyclerView recyclerView_job;
 
 
         public     class JobViewHolder extends RecyclerView.ViewHolder {
-                public ImageView jobimage;
-                public TextView jobtitle;
+
 
 
                 public JobViewHolder(View itemView) {
@@ -146,8 +177,8 @@ public RecyclerView recyclerView_job;
                 JobDetails jobDetails = mapper.convertValue(job_list.get(position), JobDetails.class);
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm a z");
                 mapper.setDateFormat(df);
-                holder.jobtitle.setText("" + jobDetails.getTitle());
-                holder.jobimage.setImageResource(R.mipmap.place);
+                jobtitle.setText("" + jobDetails.getTitle());
+                jobimage.setImageResource(R.mipmap.place);
 
             }
 

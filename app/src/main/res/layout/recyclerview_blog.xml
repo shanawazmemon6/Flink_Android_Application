@@ -16,6 +16,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
+
             android:layout_height="match_parent">
 
             <ImageView
@@ -31,6 +32,7 @@
                 android:maxWidth="50dp"
                 android:minHeight="50dp"
                 android:minWidth="50dp"
+                android:transitionName="bloguserimage"
                 app:srcCompat="@mipmap/place" />
 
             <TextView
@@ -43,8 +45,10 @@
                 android:layout_marginStart="27dp"
                 android:layout_toEndOf="@+id/blog_userimage"
                 android:layout_toRightOf="@+id/blog_userimage"
+                android:textColor="@color/FlinkText"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:transitionName="blogusername" />
 
             <TextView
                 android:id="@+id/blog_title"
@@ -56,7 +60,8 @@
                 android:layout_margin="5dp"
                 android:textColor="@color/FlinkText"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:transitionName="blogtitle" />
 
             <ImageView
                 android:id="@+id/dummy_image"

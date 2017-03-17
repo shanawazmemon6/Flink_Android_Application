@@ -1,30 +1,20 @@
 package com.shanawaz.flink.flink;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.annotation.StringRes;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.transition.Fade;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.shanawaz.flink.flink.model.UserDetails;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -32,7 +22,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class SplashScreen extends AppCompatActivity {
@@ -40,14 +29,16 @@ public class SplashScreen extends AppCompatActivity {
     Button loginbtn;
     EditText email;
     EditText passowrd;
-    String base_url="http://192.168.0.4:8086/Flink_BE/";
+    String base_url="http://192.168.0.7:8086/Flink_BE/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         setContentView(R.layout.activity_splash_screen);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-
         loginbtn = (Button) findViewById(R.id.loginbtn);
         email = (EditText) findViewById(R.id.email);
         passowrd = (EditText) findViewById(R.id.password);
@@ -55,7 +46,6 @@ public class SplashScreen extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("login_credentials", MODE_PRIVATE);
         final String user_details = sharedPreferences.getString("login_user", "");
-
         if (!user_details.equals("")) {
             final UserDetails prefence_user = gson.fromJson(user_details, UserDetails.class);
             if (prefence_user.getCode().equals("200")) {
@@ -66,7 +56,6 @@ public class SplashScreen extends AppCompatActivity {
             }
 
         }
-
 
         loginbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +99,7 @@ public void login(UserDetails user_obj){
             editor.putString("login_user", logindetails);
             if (editor.commit()) {
                 startActivity(new Intent(getApplicationContext(), UserActivity.class));
+                finish();
             }
 
         } else if (role.equals("Admin")) {
@@ -119,6 +109,8 @@ public void login(UserDetails user_obj){
             editor.putString("login_user", logindetails);
             if (editor.commit()) {
                 startActivity(new Intent(getApplicationContext(), AdminActivity.class));
+                finish();
+
             }
 
         }
