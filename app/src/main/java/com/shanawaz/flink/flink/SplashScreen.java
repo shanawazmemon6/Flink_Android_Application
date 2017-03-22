@@ -29,7 +29,7 @@ public class SplashScreen extends AppCompatActivity {
     Button loginbtn;
     EditText email;
     EditText passowrd;
-    String base_url="http://192.168.0.7:8086/Flink_BE/";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +74,8 @@ public class SplashScreen extends AppCompatActivity {
 public void login(UserDetails user_obj){
 
     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
-    String url = "" + base_url + "loginAuthentication";
+    RestBasicInfo restBasicInfo=new RestBasicInfo();
+    String url = "" + restBasicInfo.BASE_URL + "loginAuthentication";
     RestTemplate rest = new RestTemplate();
     List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
     messageConverters.add(new FormHttpMessageConverter());

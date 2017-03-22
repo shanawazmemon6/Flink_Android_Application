@@ -32,7 +32,7 @@ import java.util.List;
 public class JobFullDescription extends AppCompatActivity {
        TextView job_title_text,job_desc,job_status,job_date,job_quali;
        Button apply;
-    private String base_url="http://192.168.0.7:8086/Flink_BE/";
+    RestBasicInfo restBasicInfo;
     List<HttpMessageConverter<?>> messageConverters;
     Gson gson;
     @Override
@@ -61,7 +61,8 @@ public class JobFullDescription extends AppCompatActivity {
         job_status.setText(""+job_details.getStatus());
         job_date.setText(""+job_details.getDate_time());
         job_quali.setText(""+job_details.getQualification());
-        String checkurl=""+base_url+"check";
+         restBasicInfo=new RestBasicInfo();
+        String checkurl=""+restBasicInfo.BASE_URL+"check";
         JobApplied jobApplied=new JobApplied();
 
 
@@ -88,7 +89,7 @@ public class JobFullDescription extends AppCompatActivity {
         apply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url=""+base_url+"applyJob";
+                String url=""+restBasicInfo.BASE_URL+"applyJob";
                 RestTemplate re=new RestTemplate();
                 re.setMessageConverters(messageConverters);
                 SharedPreferences sharedPreferences = getSharedPreferences("login_credentials", MODE_PRIVATE);

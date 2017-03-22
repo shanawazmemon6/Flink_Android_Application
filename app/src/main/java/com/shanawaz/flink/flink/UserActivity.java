@@ -2,6 +2,7 @@ package com.shanawaz.flink.flink;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -18,6 +19,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
+import android.widget.Toast;
 
 
 public class UserActivity extends AppCompatActivity {
@@ -63,7 +65,18 @@ public class UserActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.Profile) {
+            Toast.makeText(this, "profile", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if (id == R.id.logout) {
+            SharedPreferences sharedPreferences = getSharedPreferences("login_credentials", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("login_user", "");
+            if (editor.commit()) {
+                startActivity(new Intent(getApplicationContext(), SplashScreen.class));
+                finish();
+            }
             return true;
         }
 

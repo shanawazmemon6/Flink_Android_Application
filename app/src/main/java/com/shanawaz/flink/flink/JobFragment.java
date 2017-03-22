@@ -41,7 +41,7 @@ public class JobFragment extends android.support.v4.app.Fragment {
 
 private RecycleJobAdpter jobAdpter;
 public RecyclerView recyclerView_job;
-    private String base_url="http://192.168.0.7:8086/Flink_BE/";
+    private String base_url="http://172.16.0.6:8086/Flink_BE/";
     public ImageView jobimage;
     public TextView jobtitle;
 
@@ -53,13 +53,10 @@ public RecyclerView recyclerView_job;
 
 
         View view = inflater.inflate(R.layout.job_fragment, container, false);
+        RestBasicInfo restBasicInfo=new RestBasicInfo();
 
-      /*  Slide slide_Right=new Slide();
-        slide_Right.setSlideEdge(Gravity.BOTTOM);
-        slide_Right.setDuration(500);
-        getActivity().getWindow().setReenterTransition(slide_Right);
+        String url = "" + restBasicInfo.BASE_URL + "allJob";
 
-*/
         Explode explode=new Explode();
         explode.setDuration(1000);
         getActivity().getWindow().setEnterTransition(explode);
@@ -67,13 +64,13 @@ public RecyclerView recyclerView_job;
         getActivity().getWindow().setExitTransition(explode);
 
 
-        String url = "" + base_url + "allJob";
         RestTemplate rest = new RestTemplate();
         List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
         messageConverters.add(new FormHttpMessageConverter());
         messageConverters.add(new StringHttpMessageConverter());
         messageConverters.add(new MappingJackson2HttpMessageConverter());
         rest.setMessageConverters(messageConverters);
+
         final List<JobDetails> job_list = rest.getForObject(url, List.class);
         recyclerView_job = (RecyclerView) view.findViewById(R.id.recycle_job);
         jobAdpter = new RecycleJobAdpter(job_list);

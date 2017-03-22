@@ -35,7 +35,6 @@ import java.util.List;
 public class BlogFragment extends Fragment{
 
      RecyclerView recyclerView_Blog;
-    private String base_url="http://192.168.0.7:8086/Flink_BE/";
     private RecyclerBlogAdpter recyclerBlogAdpter;
     public ImageView blog_user_image;
     public TextView blog_username,blog_title,blog_desc;
@@ -44,7 +43,10 @@ public class BlogFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.blog_fragment,container,false);
-        String url = "" + base_url + "allBlog";
+
+        RestBasicInfo restBasicInfo=new RestBasicInfo();
+
+        String url = "" + restBasicInfo.BASE_URL + "allBlog";
         final RestTemplate rest = new RestTemplate();
         List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
         messageConverters.add(new FormHttpMessageConverter());
