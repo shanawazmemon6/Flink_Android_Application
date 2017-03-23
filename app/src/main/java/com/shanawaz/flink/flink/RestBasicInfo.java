@@ -13,4 +13,17 @@ import java.util.List;
 public class RestBasicInfo {
     String BASE_URL="http://172.16.0.6:8086/Flink_BE/";
 
+
+    public RestTemplate converters(){
+      RestTemplate restTemplate=new RestTemplate();
+        List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
+        messageConverters.add(new FormHttpMessageConverter());
+        messageConverters.add(new StringHttpMessageConverter());
+        messageConverters.add(new MappingJackson2HttpMessageConverter());
+        restTemplate.setMessageConverters(messageConverters);
+
+        return restTemplate;
+
+    }
+
 }

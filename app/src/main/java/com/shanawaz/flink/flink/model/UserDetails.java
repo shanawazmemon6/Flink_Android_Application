@@ -15,10 +15,28 @@ public class UserDetails extends ErrorManger implements Serializable {
     private String mobile;
     private String role;
     private String gender;
-
     private String password;
     private String is_online;
     private String status;
+    private String dateofbirth;
+    private String multi;
+
+
+    public String getMulti() {
+        return multi;
+    }
+
+    public void setMulti(String multi) {
+        this.multi = multi;
+    }
+
+    public String getDateofbirth() {
+        return dateofbirth;
+    }
+
+    public void setDateofbirth(String dateofbirth) {
+        this.dateofbirth = dateofbirth;
+    }
 
     public String getUsername() {
         return username;

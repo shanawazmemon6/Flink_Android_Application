@@ -76,12 +76,9 @@ public void login(UserDetails user_obj){
     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
     RestBasicInfo restBasicInfo=new RestBasicInfo();
     String url = "" + restBasicInfo.BASE_URL + "loginAuthentication";
-    RestTemplate rest = new RestTemplate();
-    List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
-    messageConverters.add(new FormHttpMessageConverter());
-    messageConverters.add(new StringHttpMessageConverter());
-    messageConverters.add(new MappingJackson2HttpMessageConverter());
-    rest.setMessageConverters(messageConverters);
+    final RestTemplate rest =restBasicInfo.converters();
+
+
     String user = rest.postForObject(url, user_obj, String.class);
     UserDetails us_obj = gson.fromJson(user, UserDetails.class);
     String status = us_obj.getStatus();
@@ -93,7 +90,7 @@ public void login(UserDetails user_obj){
     if (code.equals("200")) {
         String logindetails = gson.toJson(us_obj);
 
-        if ((role.equals("Student") || role.equals("Alumni") || role.equals("Alumni")) && (status.equals("accepted"))) {
+        if ((role.equals("Student") || role.equals("Alumni") || role.equals("Employee")) && (status.equals("accepted"))) {
 
             SharedPreferences  sharedPreferences = getSharedPreferences("login_credentials", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();

@@ -5,4 +5,5 @@
     <color name="colorAccent">#424242</color>
     <color name="Flink">#bdbdbd</color>
     <color name="FlinkText">#424242</color>
+    <color name="Status">#009688</color>
 </resources>

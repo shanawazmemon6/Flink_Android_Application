@@ -41,7 +41,6 @@ public class JobFragment extends android.support.v4.app.Fragment {
 
 private RecycleJobAdpter jobAdpter;
 public RecyclerView recyclerView_job;
-    private String base_url="http://172.16.0.6:8086/Flink_BE/";
     public ImageView jobimage;
     public TextView jobtitle;
 
@@ -64,12 +63,8 @@ public RecyclerView recyclerView_job;
         getActivity().getWindow().setExitTransition(explode);
 
 
-        RestTemplate rest = new RestTemplate();
-        List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
-        messageConverters.add(new FormHttpMessageConverter());
-        messageConverters.add(new StringHttpMessageConverter());
-        messageConverters.add(new MappingJackson2HttpMessageConverter());
-        rest.setMessageConverters(messageConverters);
+        final RestTemplate rest =restBasicInfo.converters();
+
 
         final List<JobDetails> job_list = rest.getForObject(url, List.class);
         recyclerView_job = (RecyclerView) view.findViewById(R.id.recycle_job);
@@ -77,8 +72,6 @@ public RecyclerView recyclerView_job;
         LinearLayoutManager joblayoutManager = new GridLayoutManager(getActivity(), 1);
         recyclerView_job.setLayoutManager(joblayoutManager);
         recyclerView_job.setHasFixedSize(true);
-        /*DividerItemDecoration dividerItemDecoration=new DividerItemDecoration(getActivity(),joblayoutManager.getOrientation());
-        recyclerView_job.addItemDecoration(dividerItemDecoration);*/
         recyclerView_job.setAdapter(jobAdpter);
 
 

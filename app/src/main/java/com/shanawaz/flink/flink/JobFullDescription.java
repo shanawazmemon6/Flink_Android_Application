@@ -33,13 +33,14 @@ public class JobFullDescription extends AppCompatActivity {
        TextView job_title_text,job_desc,job_status,job_date,job_quali;
        Button apply;
     RestBasicInfo restBasicInfo;
-    List<HttpMessageConverter<?>> messageConverters;
+
     Gson gson;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_full_description);
+        /*getWindow().setStatusBarColor(R.color.Status);*/
         Explode explode=new Explode();
         explode.setDuration(1000);
         getWindow().setEnterTransition(explode);
@@ -71,12 +72,8 @@ public class JobFullDescription extends AppCompatActivity {
         final String user_details = sharedPreferences.getString("login_user", "");
         final UserDetails prefence_user = gson.fromJson(user_details, UserDetails.class);
         jobApplied.setUsername(prefence_user.getUsername());
-        RestTemplate rest=new RestTemplate();
-         messageConverters = new ArrayList<HttpMessageConverter<?>>();
-        messageConverters.add(new FormHttpMessageConverter());
-        messageConverters.add(new StringHttpMessageConverter());
-        messageConverters.add(new MappingJackson2HttpMessageConverter());
-        rest.setMessageConverters(messageConverters);
+        final RestTemplate rest =restBasicInfo.converters();
+
         boolean status=rest.postForObject(checkurl,jobApplied,Boolean.class);
 
         if(status){
@@ -90,8 +87,9 @@ public class JobFullDescription extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String url=""+restBasicInfo.BASE_URL+"applyJob";
-                RestTemplate re=new RestTemplate();
-                re.setMessageConverters(messageConverters);
+                 RestTemplate re =restBasicInfo.converters();
+
+
                 SharedPreferences sharedPreferences = getSharedPreferences("login_credentials", MODE_PRIVATE);
                 final String user_details = sharedPreferences.getString("login_user", "");
                 final UserDetails prefence_user = gson.fromJson(user_details, UserDetails.class);

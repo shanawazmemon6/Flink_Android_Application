@@ -3,6 +3,8 @@ package com.shanawaz.flink.flink;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.DimenRes;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
@@ -47,20 +49,19 @@ public class BlogFragment extends Fragment{
         RestBasicInfo restBasicInfo=new RestBasicInfo();
 
         String url = "" + restBasicInfo.BASE_URL + "allBlog";
-        final RestTemplate rest = new RestTemplate();
-        List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
-        messageConverters.add(new FormHttpMessageConverter());
-        messageConverters.add(new StringHttpMessageConverter());
-        messageConverters.add(new MappingJackson2HttpMessageConverter());
-        rest.setMessageConverters(messageConverters);
+        final RestTemplate rest =restBasicInfo.converters();
+
 
         recyclerView_Blog= (RecyclerView) view.findViewById(R.id.recycler_blog);
         GridLayoutManager layoutManager=new GridLayoutManager(getActivity(),1);
+
         recyclerView_Blog.setLayoutManager(layoutManager);
         recyclerView_Blog.setHasFixedSize(true);
         final List<BlogDetails> blog_list = rest.getForObject(url, List.class);
         recyclerBlogAdpter=new RecyclerBlogAdpter(blog_list);
         recyclerView_Blog.setAdapter(recyclerBlogAdpter);
+
+
         final GestureDetector gestureDetector=new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
 
 
@@ -146,7 +147,6 @@ public class BlogFragment extends Fragment{
                 blog_user_image=(ImageView)itemView.findViewById(R.id.blog_userimage);
                 blog_username=(TextView)itemView.findViewById(R.id.blog_username);
                 blog_title=(TextView)itemView.findViewById(R.id.blog_title);
-
                 blog_desc=(TextView)itemView.findViewById(R.id.blog_desc);
 
 
@@ -194,6 +194,10 @@ public class BlogFragment extends Fragment{
 
 
     }
+
+
+
+
 
 
 }
