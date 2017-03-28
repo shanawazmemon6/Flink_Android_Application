@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RestBasicInfo {
-    String BASE_URL="http://172.16.0.6:8086/Flink_BE/";
+    String BASE_URL="http://192.168.0.6:8086/Flink_BE/";
 
 
     public RestTemplate converters(){

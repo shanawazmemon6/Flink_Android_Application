@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -56,12 +57,14 @@ public RecyclerView recyclerView_job;
 
         String url = "" + restBasicInfo.BASE_URL + "allJob";
 
-        Explode explode=new Explode();
-        explode.setDuration(1000);
-        getActivity().getWindow().setEnterTransition(explode);
-        getActivity().getWindow().setReenterTransition(explode);
-        getActivity().getWindow().setExitTransition(explode);
 
+          Fade fade_in=new Fade(Fade.IN);
+        fade_in.setDuration(1000);
+        getActivity().getWindow().setEnterTransition(fade_in);
+
+
+        Fade fade_out=new Fade(Fade.OUT);
+          getActivity().getWindow().setExitTransition(fade_out);
 
         final RestTemplate rest =restBasicInfo.converters();
 
@@ -73,61 +76,6 @@ public RecyclerView recyclerView_job;
         recyclerView_job.setLayoutManager(joblayoutManager);
         recyclerView_job.setHasFixedSize(true);
         recyclerView_job.setAdapter(jobAdpter);
-
-
-
-
-
-        final GestureDetector gesture = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                return true;
-            }
-        });
-
-
-        recyclerView_job.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                View v = rv.findChildViewUnder(e.getX(), e.getY());
-
-                if (v != null && gesture.onTouchEvent(e)) {
-                    Pair[] pairs=new Pair[2];
-                    pairs[0]=new Pair<View,String>(jobimage,"jobimage");
-                    pairs[1]=new Pair<View,String>(jobtitle,"jobtitle");
-
-
-
-
-
-
-
-                    Intent job_fulldescription = new Intent(getActivity(), JobFullDescription.class);
-                    int posi = recyclerView_job.getChildPosition(v);
-                    ObjectMapper mapper = new ObjectMapper();
-                    DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-                    mapper.setDateFormat(df);
-                    JobDetails jobDetails = mapper.convertValue(job_list.get(posi), JobDetails.class);
-                    String job_json_string = gson.toJson(jobDetails);
-                    job_fulldescription.putExtra("job_list", job_json_string);
-                    startActivity(job_fulldescription,ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-                    return true;
-                }
-
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
-
         return view;
     }
       public   class RecycleJobAdpter extends RecyclerView.Adapter<RecycleJobAdpter.JobViewHolder> {
@@ -138,7 +86,7 @@ public RecyclerView recyclerView_job;
             }
 
 
-        public     class JobViewHolder extends RecyclerView.ViewHolder {
+        public     class JobViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
 
 
@@ -146,11 +94,28 @@ public RecyclerView recyclerView_job;
                     super(itemView);
                     jobimage = (ImageView) itemView.findViewById(R.id.job_image);
                     jobtitle = (TextView) itemView.findViewById(R.id.job_title);
-
+                   itemView.setOnClickListener(this);
                 }
 
 
+            @Override
+            public void onClick(View v) {
+
+                Pair[] pairs=new Pair[2];
+                pairs[0]=new Pair<View,String>(v.findViewById(R.id.job_image),"jobimage");
+                pairs[1]=new Pair<View,String>(v.findViewById(R.id.job_title),"jobtitle");
+              ActivityOptions activityOptions=  ActivityOptions.makeSceneTransitionAnimation(getActivity(),pairs);
+                Intent job_fulldescription = new Intent(getActivity(), JobFullDescription.class);
+                ObjectMapper mapper = new ObjectMapper();
+                DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                mapper.setDateFormat(df);
+                JobDetails jobDetails = mapper.convertValue(job_list.get(getItemViewType()), JobDetails.class);
+                String job_json_string = gson.toJson(jobDetails);
+                job_fulldescription.putExtra("job_list", job_json_string);
+                startActivity(job_fulldescription,activityOptions.toBundle());
+
             }
+        }
 
             @Override
             public JobViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -175,7 +140,7 @@ public RecyclerView recyclerView_job;
             @Override
             public int getItemViewType(int position) {
 
-                return super.getItemViewType(position);
+                return position;
             }
 
             @Override

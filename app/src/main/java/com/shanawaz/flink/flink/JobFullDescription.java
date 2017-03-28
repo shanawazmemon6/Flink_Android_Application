@@ -41,11 +41,6 @@ public class JobFullDescription extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_full_description);
         /*getWindow().setStatusBarColor(R.color.Status);*/
-        Explode explode=new Explode();
-        explode.setDuration(1000);
-        getWindow().setEnterTransition(explode);
-       getWindow().setReenterTransition(explode);
-        getWindow().setExitTransition(explode);
 
         gson=new Gson();
         Intent getIntent=getIntent();
@@ -73,6 +68,7 @@ public class JobFullDescription extends AppCompatActivity {
         final UserDetails prefence_user = gson.fromJson(user_details, UserDetails.class);
         jobApplied.setUsername(prefence_user.getUsername());
         final RestTemplate rest =restBasicInfo.converters();
+
 
         boolean status=rest.postForObject(checkurl,jobApplied,Boolean.class);
 

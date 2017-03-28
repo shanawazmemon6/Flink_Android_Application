@@ -10,6 +10,8 @@ import android.transition.Fade;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,6 +31,7 @@ public class SplashScreen extends AppCompatActivity {
     Button loginbtn;
     EditText email;
     EditText passowrd;
+    TextView errormsg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,7 @@ public class SplashScreen extends AppCompatActivity {
         loginbtn = (Button) findViewById(R.id.loginbtn);
         email = (EditText) findViewById(R.id.email);
         passowrd = (EditText) findViewById(R.id.password);
+        errormsg= (TextView) findViewById(R.id.errormessage);
          Gson gson=new Gson();
 
         SharedPreferences sharedPreferences = getSharedPreferences("login_credentials", MODE_PRIVATE);
@@ -112,9 +116,27 @@ public void login(UserDetails user_obj){
             }
 
         }
+        else if((role.equals("Student") || role.equals("Alumni") || role.equals("Employee")) && (status.equals("rejected"))) {
+
+
+
+            errormsg.setText("Your Accout Has Been Rejected Due Some Reasons.Please Contact to Administrative.");
+
+        }
+        else if((role.equals("Student") || role.equals("Alumni") || role.equals("Employee")) && (status.equals("blocked"))) {
+
+
+
+            errormsg.setText("Your Accout Has Been Blocked Due Some Reasons.Please Contact to Administrative.");
+
+        }
+
 
     }
+    else{
+        errormsg.setText("Entered Username or Password are incorrect ");
 
+    }
 
 
 

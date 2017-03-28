@@ -1,6 +1,7 @@
 package com.shanawaz.flink.flink;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,102 +21,45 @@ import com.shanawaz.flink.flink.model.BlogDetails;
 import com.shanawaz.flink.flink.model.UserDetails;
 
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class UsersFragment_Admin extends Fragment {
     TextView admin_username,admin_useremail,admin_userphone,admin_usergender,admin_userrole,admin_userstatus;
     Button admin_btn,student_btn,alumin_btn,employee_btn,accept_btn,reject_btn,block_btn;
-    List<UserDetails> user;
-
+   public List<UserDetails> user_list;
+    RestBasicInfo restBasicInfo;
+    RestTemplate restTemplate;
+    RecyclerView recyclerView_adminuser;
+    RecycleAdminUser_Adpter recycleAdminUser_adpter;
+    public String allurl;
+    int po;
     @Override
     public View onCreateView(LayoutInflater inflater,  ViewGroup container,  Bundle savedInstanceState) {
 
         final View view=inflater.inflate(R.layout.fragment_admin,container,false);
-        RestBasicInfo restBasicInfo=new RestBasicInfo();
-        String url=""+restBasicInfo.BASE_URL+"allusers";
-        RestTemplate restTemplate = restBasicInfo.converters();
-        user= restTemplate.getForObject(url,List.class);
-        RecycleAdminUser_Adpter recycleAdminUser_adpter=new RecycleAdminUser_Adpter(user);
-        final RecyclerView recyclerView_adminuser= (RecyclerView) view.findViewById(R.id.recycle_admin_user);
+         restBasicInfo=new RestBasicInfo();
+         allurl=""+restBasicInfo.BASE_URL+"allusers";
+         restTemplate = restBasicInfo.converters();
+        user_list= restTemplate.getForObject(allurl,List.class);
+         recycleAdminUser_adpter=new RecycleAdminUser_Adpter(user_list);
+
+          recyclerView_adminuser= (RecyclerView) view.findViewById(R.id.recycle_admin_user);
         GridLayoutManager layoutManager=new GridLayoutManager(getActivity(),1);
         recyclerView_adminuser.setLayoutManager(layoutManager);
         recyclerView_adminuser.setAdapter(recycleAdminUser_adpter);
-
-        final GestureDetector gestureDetector=new GestureDetector(new GestureDetector.SimpleOnGestureListener() {
-
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-
-
-                return true;
-            }
-
-
-        });
-
-        recyclerView_adminuser.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                View v = rv.findChildViewUnder(e.getX(), e.getY());
-                if (v != null && gestureDetector.onTouchEvent(e)) {
-                    final ObjectMapper mapper = new ObjectMapper();
-                    final int pos=recyclerView_adminuser.getChildPosition(v);
-                    final UserDetails user_det= mapper.convertValue(user.get(pos), UserDetails.class);
-
-                    Toast.makeText(getActivity(), ""+user_det.getUsername(), Toast.LENGTH_SHORT).show();
-
-                    //action to button
-
-                    //Accepted
-                    accept_btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-
-
-                        }
-                    });
-
-                    //Reject
-                    reject_btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
-                    });
-                    //Block
-                    block_btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
-                    });
-
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
 
 
         return view;
     }
 
 
-    public class RecycleAdminUser_Adpter extends RecyclerView.Adapter<RecycleAdminUser_Adpter.RecycleAdminuUser_Holder>{
+    public class RecycleAdminUser_Adpter extends RecyclerView.Adapter<RecycleAdminUser_Adpter.RecycleAdminuUser_Holder> {
 
         List<UserDetails> userDetails;
 
@@ -124,7 +68,7 @@ public class UsersFragment_Admin extends Fragment {
             this.userDetails=user;
         }
 
-        public class RecycleAdminuUser_Holder extends RecyclerView.ViewHolder {
+        public class RecycleAdminuUser_Holder extends RecyclerView.ViewHolder implements View.OnClickListener {
             public RecycleAdminuUser_Holder(View itemView) {
                 super(itemView);
 
@@ -143,6 +87,14 @@ public class UsersFragment_Admin extends Fragment {
                 employee_btn=(Button)itemView.findViewById(R.id.employee_btn);
                 student_btn=(Button)itemView.findViewById(R.id.student_btn);
                 alumin_btn=(Button)itemView.findViewById(R.id.alumin_btn);
+                 itemView.setOnClickListener(this);
+
+
+
+            }
+
+            @Override
+            public void onClick(View v) {
 
             }
         }
@@ -157,16 +109,117 @@ public class UsersFragment_Admin extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(RecycleAdminuUser_Holder holder, int position) {
+        public void onBindViewHolder(RecycleAdminuUser_Holder holder, final int position) {
 
-            ObjectMapper mapper = new ObjectMapper();
+            final ObjectMapper mapper = new ObjectMapper();
             final UserDetails user = mapper.convertValue(userDetails.get(position), UserDetails.class);
+
+
+
+            final RestTemplate restTemplate = restBasicInfo.converters();
+
             admin_username.setText(""+user.getUsername());
             admin_useremail.setText(""+user.getEmail());
             admin_userphone.setText(""+user.getMobile());
             admin_usergender.setText(""+user.getGender());
             admin_userstatus.setText(""+user.getStatus());
             admin_userrole.setText(""+user.getRole());
+
+            final String status_url=""+restBasicInfo.BASE_URL+"status/{username}/{status}";
+            final String role_url=""+restBasicInfo.BASE_URL+"role/{username}/{role}";
+
+
+            //action
+            accept_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Map<String,String> statusmap=new HashMap<String, String>();
+                    statusmap.put("username",user.getUsername());
+                    statusmap.put("status","accepted");
+                    restTemplate.getForObject(status_url,String.class,statusmap);
+                    List<UserDetails>  user_inner= restTemplate.getForObject(allurl,List.class);
+                    user_list=user_inner;
+                    update_adpter(user_inner,position);
+                }});
+
+            reject_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Map<String,String> statusmap=new HashMap<String, String>();
+                    statusmap.put("username",user.getUsername());
+                    statusmap.put("status","rejected");
+                    restTemplate.getForObject(status_url,String.class,statusmap);
+                  List<UserDetails>  user_inner= restTemplate.getForObject(allurl,List.class);
+                             user_list=user_inner;
+                    update_adpter(user_inner,position);
+                }});
+            block_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Map<String,String> statusmap=new HashMap<String, String>();
+                    statusmap.put("username",user.getUsername());
+                    statusmap.put("status","blocked");
+                    restTemplate.getForObject(status_url,String.class,statusmap);
+                    List<UserDetails>  user_inner= restTemplate.getForObject(allurl,List.class);
+                    user_list=user_inner;
+                    update_adpter(user_inner,position);
+                }});
+            //Role button
+
+            admin_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Map<String,String> rolemap=new HashMap<String, String>();
+                    rolemap.put("username",user.getUsername());
+                    rolemap.put("role","Admin");
+                    restTemplate.getForObject(role_url,String.class,rolemap);
+                    List<UserDetails>  user_inner= restTemplate.getForObject(allurl,List.class);
+                    user_list=user_inner;
+                    update_adpter(user_inner,position);
+                }
+            });
+
+            student_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Map<String,String> rolemap=new HashMap<String, String>();
+                    rolemap.put("username",user.getUsername());
+                    rolemap.put("role","Student");
+                    restTemplate.getForObject(role_url,String.class,rolemap);
+                    List<UserDetails>  user_inner= restTemplate.getForObject(allurl,List.class);
+                    user_list=user_inner;
+                    update_adpter(user_inner,position);
+                }
+            });
+
+            alumin_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Map<String,String> rolemap=new HashMap<String, String>();
+                    rolemap.put("username",user.getUsername());
+                    rolemap.put("role","Alumni");
+                    restTemplate.getForObject(role_url,String.class,rolemap);
+                    List<UserDetails>  user_inner= restTemplate.getForObject(allurl,List.class);
+                    user_list=user_inner;
+                    update_adpter(user_inner,position);
+                }
+            });
+
+            employee_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Map<String,String> rolemap=new HashMap<String, String>();
+                    rolemap.put("username",user.getUsername());
+                    rolemap.put("role","Employee");
+                    restTemplate.getForObject(role_url,String.class,rolemap);
+                    List<UserDetails>  user_inner= restTemplate.getForObject(allurl,List.class);
+                    user_list=user_inner;
+                    update_adpter(user_inner,position);
+
+                }
+            });
+
 
             //Color to button
             if(user.getStatus().equals("accepted")){
@@ -207,6 +260,10 @@ public class UsersFragment_Admin extends Fragment {
             return userDetails.size();
         }
     }
-
+public void update_adpter(List<UserDetails> user_inner,int position){
+    recycleAdminUser_adpter=new RecycleAdminUser_Adpter(user_inner);
+    recyclerView_adminuser.setAdapter(recycleAdminUser_adpter);
+    recyclerView_adminuser.scrollToPosition(position);
+}
 
 }

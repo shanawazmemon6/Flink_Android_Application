@@ -40,6 +40,7 @@ public class BlogFragment extends Fragment{
     private RecyclerBlogAdpter recyclerBlogAdpter;
     public ImageView blog_user_image;
     public TextView blog_username,blog_title,blog_desc;
+    public  List<BlogDetails> blog_list;
 
 
     @Override
@@ -57,76 +58,12 @@ public class BlogFragment extends Fragment{
 
         recyclerView_Blog.setLayoutManager(layoutManager);
         recyclerView_Blog.setHasFixedSize(true);
-        final List<BlogDetails> blog_list = rest.getForObject(url, List.class);
+        blog_list = rest.getForObject(url, List.class);
         recyclerBlogAdpter=new RecyclerBlogAdpter(blog_list);
         recyclerView_Blog.setAdapter(recyclerBlogAdpter);
 
 
-        final GestureDetector gestureDetector=new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
-
-
-            @Override
-            public boolean onSingleTapUp(MotionEvent e) {
-                return true;
-            }
-
-        });
-
-        recyclerView_Blog.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                View v = rv.findChildViewUnder(e.getX(), e.getY());
-
-                if (v != null && gestureDetector.onTouchEvent(e)) {
-
-                   /* Pair[] pair=new Pair[3];
-                    pair[0]=new Pair<View,String>(blog_user_image,"bloguserimage");
-                    pair[1]=new Pair<View,String>(blog_username,"blogusername");
-                    pair[2]=new Pair<View,String>(blog_title,"blogtitle");*/
-
-                    Pair<View, String> p1 = Pair.create((View)blog_user_image, "bloguserimage");
-                    Pair<View, String> p2 = Pair.create((View)blog_username, "blogusername");
-                    Pair<View, String> p3 = Pair.create((View)blog_title, "blogtitle");
-
-
-                    ActivityOptionsCompat activityOptions=ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity());
-
-
-                    Intent blog_fulldescription = new Intent(getActivity(), BlogFullDescription.class);
-                    int posi = recyclerView_Blog.getChildPosition(v);
-                    Gson gson=new Gson();
-                    ObjectMapper mapper = new ObjectMapper();
-                    DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-                    mapper.setDateFormat(df);
-                    BlogDetails blogDetails = mapper.convertValue(blog_list.get(posi), BlogDetails.class);
-                    String job_json_string = gson.toJson(blogDetails);
-                    blog_fulldescription.putExtra("blog_list", job_json_string);
-                    startActivity(blog_fulldescription,activityOptions.toBundle());
-
-
-
-
-
-                    return true;
-                }
-
-                    return false;
-            }
-
-            @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
-
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
-
-
-        return view;
+               return view;
 
     }
 
@@ -139,7 +76,7 @@ public class BlogFragment extends Fragment{
 
         }
 
-        public class BlogViewHolder extends RecyclerView.ViewHolder{
+        public class BlogViewHolder extends RecyclerView.ViewHolder implements  View.OnClickListener{
 
             public BlogViewHolder(View itemView) {
                 super(itemView);
@@ -149,12 +86,35 @@ public class BlogFragment extends Fragment{
                 blog_title=(TextView)itemView.findViewById(R.id.blog_title);
                 blog_desc=(TextView)itemView.findViewById(R.id.blog_desc);
 
+             itemView.setOnClickListener(this);
 
 
 
 
             }
 
+            @Override
+            public void onClick(View v) {
+                Pair[] pair=new Pair[3];
+                pair[0]=new Pair<View,String>(v.findViewById(R.id.blog_userimage),"bloguserimage");
+                pair[1]=new Pair<View,String>(v.findViewById(R.id.blog_username),"blogusername");
+                pair[2]=new Pair<View,String>(v.findViewById(R.id.blog_title),"blogtitle");
+
+
+                ActivityOptionsCompat activityOptions=ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),pair);
+
+
+                Intent blog_fulldescription = new Intent(getActivity(), BlogFullDescription.class);
+                int posi = recyclerView_Blog.getChildPosition(v);
+                Gson gson=new Gson();
+                ObjectMapper mapper = new ObjectMapper();
+                DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                mapper.setDateFormat(df);
+                BlogDetails blogDetails = mapper.convertValue(blog_list.get(posi), BlogDetails.class);
+                String job_json_string = gson.toJson(blogDetails);
+                blog_fulldescription.putExtra("blog_list", job_json_string);
+                startActivity(blog_fulldescription,activityOptions.toBundle());
+            }
         }
 
         @Override

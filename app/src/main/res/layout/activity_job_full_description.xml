@@ -22,11 +22,13 @@
             app:toolbarId="@+id/toolbar">
 
             <ImageView
-                android:id="@+id/app_bar_image"
+                android:id="@+id/job_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="center"
-                android:src="@mipmap/jobholding" />
+                android:src="@mipmap/jobholding"
+                android:transitionName="jobimage"
+                />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"

@@ -22,10 +22,6 @@ public class BlogFullDescription extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getWindow().setStatusBarColor(this.getResources().getColor(R.color.colorPrimaryDark));
-        Explode explode=new Explode();
-        explode.setDuration(1000);
-        getWindow().setEnterTransition(explode);
-
 
 
 
